@@ -13,11 +13,11 @@ jobs:
     - name: Checkout source
       uses: actions/checkout@v4
 
-    - name: Download AutoHotkey v2
+    - name: Download AutoHotkey v2 (GitHub release)
       shell: powershell
       run: |
         Invoke-WebRequest `
-          -Uri "https://www.autohotkey.com/download/ahk-v2.zip" `
+          -Uri "https://github.com/AutoHotkey/AutoHotkey/releases/latest/download/AutoHotkey.zip" `
           -OutFile "ahk.zip"
 
         Expand-Archive "ahk.zip" -DestinationPath "ahk"
@@ -25,11 +25,11 @@ jobs:
     - name: Compile EXE
       shell: powershell
       run: |
-        $ahk = "ahk\Compiler\Ahk2Exe.exe"
-        $input = "NetSpeedTaskbar.ahk"
-        $output = "NetSpeedTaskbar.exe"
+        $ahkCompiler = "ahk\Compiler\Ahk2Exe.exe"
+        $inputFile = "NetSpeedTaskbar.ahk"
+        $outputFile = "NetSpeedTaskbar.exe"
 
-        & $ahk /in $input /out $output
+        & $ahkCompiler /in $inputFile /out $outputFile
 
     - name: Upload EXE artifact
       uses: actions/upload-artifact@v4
