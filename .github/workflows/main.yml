@@ -9,20 +9,23 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout
+
+    - name: Checkout source
       uses: actions/checkout@v4
 
-    - name: Install AutoHotkey
+    - name: Download AutoHotkey v2
       run: |
-        choco install autohotkey --version=2.0.18 -y
+        curl -L -o ahk.zip https://www.autohotkey.com/download/ahk-v2.zip
+        powershell Expand-Archive ahk.zip -DestinationPath ahk
 
-    - name: Build EXE
+    - name: Compile EXE
       run: |
-        "C:\Program Files\AutoHotkey\Compiler\Ahk2Exe.exe" ^
+        ahk\AutoHotkey64.exe /ErrorStdOut ^
+        ahk\Compiler\Ahk2Exe.ahk ^
         /in NetSpeedTaskbar.ahk ^
         /out NetSpeedTaskbar.exe
 
-    - name: Upload EXE
+    - name: Upload EXE artifact
       uses: actions/upload-artifact@v4
       with:
         name: NetSpeedTaskbar
