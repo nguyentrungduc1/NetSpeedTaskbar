@@ -14,16 +14,22 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Download AutoHotkey v2
+      shell: powershell
       run: |
-        curl -L -o ahk.zip https://www.autohotkey.com/download/ahk-v2.zip
-        powershell Expand-Archive ahk.zip -DestinationPath ahk
+        Invoke-WebRequest `
+          -Uri "https://www.autohotkey.com/download/ahk-v2.zip" `
+          -OutFile "ahk.zip"
+
+        Expand-Archive "ahk.zip" -DestinationPath "ahk"
 
     - name: Compile EXE
+      shell: powershell
       run: |
-        ahk\AutoHotkey64.exe /ErrorStdOut ^
-        ahk\Compiler\Ahk2Exe.ahk ^
-        /in NetSpeedTaskbar.ahk ^
-        /out NetSpeedTaskbar.exe
+        $ahk = "ahk\Compiler\Ahk2Exe.exe"
+        $input = "NetSpeedTaskbar.ahk"
+        $output = "NetSpeedTaskbar.exe"
+
+        & $ahk /in $input /out $output
 
     - name: Upload EXE artifact
       uses: actions/upload-artifact@v4
