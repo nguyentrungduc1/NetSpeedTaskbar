@@ -1,0 +1,29 @@
+name: Build EXE
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Install AutoHotkey
+      run: |
+        choco install autohotkey --version=2.0.18 -y
+
+    - name: Build EXE
+      run: |
+        "C:\Program Files\AutoHotkey\Compiler\Ahk2Exe.exe" ^
+        /in NetSpeedTaskbar.ahk ^
+        /out NetSpeedTaskbar.exe
+
+    - name: Upload EXE
+      uses: actions/upload-artifact@v4
+      with:
+        name: NetSpeedTaskbar
+        path: NetSpeedTaskbar.exe
