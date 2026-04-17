@@ -10,28 +10,16 @@ jobs:
 
     steps:
 
-    - name: Checkout source
+    - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Download AutoHotkey v2 (GitHub release)
-      shell: powershell
-      run: |
-        Invoke-WebRequest `
-          -Uri "https://github.com/AutoHotkey/AutoHotkey/releases/latest/download/AutoHotkey.zip" `
-          -OutFile "ahk.zip"
+    - name: Compile AutoHotkey script
+      uses: benmusson/ahk2exe-action@v1
+      with:
+        in: NetSpeedTaskbar.ahk
+        out: NetSpeedTaskbar.exe
 
-        Expand-Archive "ahk.zip" -DestinationPath "ahk"
-
-    - name: Compile EXE
-      shell: powershell
-      run: |
-        $ahkCompiler = "ahk\Compiler\Ahk2Exe.exe"
-        $inputFile = "NetSpeedTaskbar.ahk"
-        $outputFile = "NetSpeedTaskbar.exe"
-
-        & $ahkCompiler /in $inputFile /out $outputFile
-
-    - name: Upload EXE artifact
+    - name: Upload EXE
       uses: actions/upload-artifact@v4
       with:
         name: NetSpeedTaskbar
